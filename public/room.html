@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Buzzer</title>
+	<script src="/../socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var buzzed = false;
+		const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+		var room = urlParams.get('room');
+		var name = urlParams.get('name');
+		if(room == null || name == null) {
+			window.location.replace('./index.html');
+		}
+		var socket = io.connect(location.origin);
+		var out = {
+			room: room,
+			name: name
+		};
+		socket.emit("join", out);
+	</script>
+	<style type="text/css">
+		#button {
+			background: #00cc00;
+			color: #ffffff;
+			width:60vh;
+			height:60vh;
+			text-align: center;
+			font-size: 15vh;
+			margin:auto;
+			line-height: 60vh;
+			user-select: none;
+		}
+		#answering {
+			margin: auto;
+			text-align: center;
+			font-size: 5vh;
+		}
+		body {
+			background: #c0c0c0;
+		}
+	</style>
+</head>
+<body>
+	<div id="button">Buzz</div>
+	<div id="answering"><u>Currently Buzzed:</u><br><i>No One</i></div>
+
+	<script type="text/javascript">
+		var button = document.getElementById("button");
+		var answering = document.getElementById("answering");
+		button.addEventListener('click', function() {
+			if(!buzzed) {
+				socket.emit("buzz", room);
+			}
+		});
+		socket.on("buzzed", function(data) {
+			console.log(data);
+			buzzed = true;
+			if(data == name) {
+				button.innerHTML = "Buzzed";
+				button.style.background = "#ff0000";
+				answering.innerHTML = "<u>Currently Buzzed:</u><br>" + data;
+			} else {
+				button.innerHTML = "Locked";
+				button.style.background = "#606060";
+				answering.innerHTML = "<u>Currently Buzzed:</u><br>" + data;
+			}
+		});
+		socket.on("reset", function(data) {
+			buzzed = false;
+			button.innerHTML = "Buzz";
+			button.style.background = "#00cc00";
+			answering.innerHTML = "<u>Currently Buzzed:</u><br><i>No One</i>";
+		});
+	</script>
+</body>
+</html>
