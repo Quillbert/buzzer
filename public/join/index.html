@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Join A Buzzer Room</title>
+	<style type="text/css">
+		body {
+			background: #c0c0c0;
+		}
+		div {
+			text-align: center;
+			margin: auto;
+			margin-top: 1vh;
+			font-size: 4vh;
+		}
+		h1 {
+			text-align: center;
+			margin: auto;
+		}
+		#top {
+			margin-top: 20vh;
+		}
+		#join {
+			font-size: 3vh;
+		}
+		input {
+			width: 45vh;
+			height: 8vh;
+			font-size: 6vh;
+			text-align: center;
+		}
+	</style>
+	<script src="/../../socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var socket = io.connect(location.origin);
+	</script>
+</head>
+<body>
+	<h1>Join A Buzzer Room</h1>
+	<div id="top"><u>Enter Game Code:</u></div>
+	<div><input type="text" id="code"></div>
+	<div><u>Enter A Name:</u></div>
+	<div><input type="text" id="name"></div>
+	<div><button id="join">Join</button></div>
+	<script type="text/javascript">
+		var button = document.getElementById("join");
+		var code = document.getElementById("code").value;
+		var name = document.getElementById("name").value;
+		button.addEventListener("click", function() {
+			code = document.getElementById("code").value;
+			name = document.getElementById("name").value;
+			if(code != "" && name != "") {
+				var out = {
+					code: code,
+					name: name
+				};
+				socket.emit("ask", out);
+			}
+		});
+		socket.on("available", function(data) {
+			if(data == "yes") {
+				window.location = "/../room/?room=" + code + "&name=" + name; 
+			} else if(data == "name") {
+				window.alert("This name is already taken. Please select another.");
+			} else if(data == "room") {
+				window.alert("This Room doesn't exist. Please verify that you used the correct code.");
+			} else {
+				window.alert("There was an error. Please try again.");
+			}
+		});
+	</script>
+</body>
+</html>
