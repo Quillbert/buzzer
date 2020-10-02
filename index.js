@@ -16,6 +16,11 @@ io.on("connection", function(socket) {
 				rooms.splice(i, 1);
 				break;
 			}
+			for(let j = 0; j < rooms[i].players.length; j++) {
+				if(rooms[i].players[j].id == socket.id) {
+					rooms[i].players.splice(j, 1);
+				}
+			}
 		}
 	});
 	socket.on("message", function(data) {
