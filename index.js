@@ -13,6 +13,7 @@ io.on("connection", function(socket) {
 	socket.on("disconnect",function(data) {
 		for(let i = 0; i < rooms.length; i++) {
 			if(rooms.host == socket.id) {
+				io.to(rooms[i].code).emit("end", "host left");
 				rooms.splice(i, 1);
 				break;
 			}
@@ -39,7 +40,8 @@ io.on("connection", function(socket) {
 			io.to(socket.id).emit("available", "room");
 		} else {
 			var player = room.players.find(function(element) {
-				return element.name == data.name;
+				var name = data.name.replace(/[^a-zA-Z0-9 ,.$#!-]/g, "");
+				return element.name == name;
 			});
 			if(player != null) {
 				io.to(socket.id).emit("available", "name");
@@ -52,7 +54,8 @@ io.on("connection", function(socket) {
 		var room = rooms.find(function(element) {
 			return element.code == data.room;
 		});
-		room.players.push(new Player(socket.id, data.name));
+		var name = data.name.replace(/[^a-zA-Z0-9 ,.$#!-]/g, "");
+		room.players.push(new Player(socket.id, name));
 		socket.join(data.room);
 		if(room.buzzed != "") {
 			io.to(socket.id).emit("buzzed", room.buzzed);
