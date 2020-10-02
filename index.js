@@ -54,6 +54,9 @@ io.on("connection", function(socket) {
 		});
 		room.players.push(new Player(socket.id, data.name));
 		socket.join(data.room);
+		if(room.buzzed != "") {
+			io.to(socket.id).emit("buzzed", room.buzzed);
+		}
 	});
 	socket.on("buzz", function(data) {
 		var room = null;
@@ -71,9 +74,9 @@ io.on("connection", function(socket) {
 			}
 		}
 		if(room != null) { 
-			if(!room.buzzed) {
+			if(room.buzzed == "") {
 				io.to(room.code).emit("buzzed", player.name);
-				room.buzzed = true;
+				room.buzzed = player.name;
 			}
 		}
 	});
@@ -83,7 +86,7 @@ io.on("connection", function(socket) {
 		});
 		if(room != null) {
 			io.to(room.code).emit("reset", "");
-			room.buzzed = false;
+			room.buzzed = "";
 		}
 	});
 });

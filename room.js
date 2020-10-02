@@ -3,7 +3,7 @@ class Room {
 		this.code = code;
 		this.host = host;
 		this.players = [];
-		this.buzzed = false;
+		this.buzzed = "";
 	}
 }
 
