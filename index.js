@@ -65,7 +65,12 @@ io.on("connection", function(socket) {
 				break;
 			}
 		}
-		io.to(room.code).emit("buzzed", player.name);
+		if(room != null) { 
+			if(!room.buzzed) {
+				io.to(room.code).emit("buzzed", player.name);
+				room.buzzed = true;
+			}
+		}
 	});
 	socket.on("reset", function(data) {
 		var room = rooms.find(function(element) {
@@ -73,6 +78,7 @@ io.on("connection", function(socket) {
 		});
 		if(room != null) {
 			io.to(room.code).emit("reset", "");
+			room.buzzed = false;
 		}
 	});
 });
