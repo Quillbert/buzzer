@@ -73,6 +73,13 @@
 			button.style.background = "#00cc00";
 			answering.innerHTML = "<u>Currently Buzzed:</u><br><i>No One</i>";
 		});
+		document.addEventListener("keydown", function(e) {
+			if(e.keyCode == 32) {
+				if(!buzzed) {
+					socket.emit("buzz", room);
+				}
+			}
+		}, false);
 	</script>
 </body>
 </html>
