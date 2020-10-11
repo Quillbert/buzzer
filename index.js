@@ -54,11 +54,14 @@ io.on("connection", function(socket) {
 		var room = rooms.find(function(element) {
 			return element.code == data.room;
 		});
-		var name = data.name.replace(/[^a-zA-Z0-9 ,.$#!-]/g, "");
-		room.players.push(new Player(socket.id, name));
-		socket.join(data.room);
-		if(room.buzzed != "") {
-			io.to(socket.id).emit("buzzed", room.buzzed);
+		if(room != null) {
+			var name = data.name.replace(/[^a-zA-Z0-9 ,.$#!-]/g, "");
+			room.players.push(new Player(socket.id, name));
+			socket.join(data.room);
+			if(room.buzzed != "") {
+				io.to(socket.id).emit("buzzed", room.buzzed);
+			}
+			listPlayers(room, room.host);
 		}
 	});
 	socket.on("buzz", function(data) {
@@ -78,7 +81,11 @@ io.on("connection", function(socket) {
 		}
 		if(room != null) { 
 			if(room.buzzed == "") {
-				io.to(room.code).emit("buzzed", player.name);
+				var out = {
+					name: player.name,
+					team: player.team
+				};
+				io.to(room.code).emit("buzzed", out);
 				room.buzzed = player.name;
 			}
 		}
@@ -90,6 +97,40 @@ io.on("connection", function(socket) {
 		if(room != null) {
 			io.to(room.code).emit("reset", "");
 			room.buzzed = "";
+		}
+	});
+	socket.on("players", function(data) {
+		var room = rooms.find(function(element) {
+			return element.host == socket.id;
+		});
+		if(room != null) {
+			listPlayers(room, socket.id);
+		}
+	});
+	socket.on("color", function(data) {
+		var room = rooms.find(function(element) {
+			return element.host == socket.id;
+		});
+		if(room != null) {
+			if(socket.id == room.host) {
+				var player = null;
+				for(let i = 0; i < room.players.length; i++) {
+					if(room.players[i].name == data.player) {
+						player = room.players[i];
+						break;
+					}
+				}
+				if(player != null) {
+					if(data.color == "red") {
+						player.team = "r";
+					} else if(data.color == "blue") {
+						player.team = "b";
+					} else {
+						player.team = "n";
+					}
+				}
+			}
+			listPlayers(room, socket.id);
 		}
 	});
 });
@@ -106,3 +147,15 @@ function createRoom(host) {
 	rooms.push(room);
 	return room;
 } 
+
+function listPlayers(room, socket) {
+	var out = [];
+	for(let i = 0; i < room.players.length; i++) {
+		var player = {
+			name: room.players[i].name,
+			team: room.players[i].team
+		}
+		out.push(player);
+	}
+	io.to(socket).emit("players", out);
+}

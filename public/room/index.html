@@ -33,7 +33,7 @@
 			user-select: none;
 			border-radius: 3vh;
 		}
-		#answering {
+		div {
 			margin: auto;
 			text-align: center;
 			font-size: 5vh;
@@ -45,7 +45,8 @@
 </head>
 <body>
 	<div id="button">Buzz</div>
-	<div id="answering"><u>Currently Buzzed:</u><br><i>No One</i></div>
+	<div><u>Currently Buzzed:</u></div>
+	<div id="answering"><i>No One</i></div>
 
 	<script type="text/javascript">
 		var button = document.getElementById("button");
@@ -58,21 +59,29 @@
 		socket.on("buzzed", function(data) {
 			console.log(data);
 			buzzed = true;
-			if(data == name) {
+			if(data.name == name) {
 				button.innerHTML = "Buzzed";
 				button.style.background = "#ff0000";
-				answering.innerHTML = "<u>Currently Buzzed:</u><br>" + data;
+				answering.innerHTML = data.name;
 			} else {
 				button.innerHTML = "Locked";
 				button.style.background = "#606060";
-				answering.innerHTML = "<u>Currently Buzzed:</u><br>" + data;
+				answering.innerHTML = data.name;
+			}
+			if(data.team == "r") {
+				answering.style.color = "red";
+			} else if(data.team == "b") {
+				answering.style.color = "blue";
+			} else {
+				answering.style.color = "black";
 			}
 		});
 		socket.on("reset", function(data) {
 			buzzed = false;
 			button.innerHTML = "Buzz";
 			button.style.background = "#00cc00";
-			answering.innerHTML = "<u>Currently Buzzed:</u><br><i>No One</i>";
+			answering.innerHTML = "<i>No One</i>";
+			answering.style.color = "black";
 		});
 		document.addEventListener("keydown", function(e) {
 			if(e.keyCode == 32) {
