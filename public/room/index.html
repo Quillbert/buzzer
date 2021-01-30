@@ -15,6 +15,7 @@
 	<script src="/../../socket.io/socket.io.js"></script>
 	<script type="text/javascript">
 		var buzzed = false;
+		var muted = false;
 		const queryString = window.location.search;
 		const urlParams = new URLSearchParams(queryString);
 		var room = urlParams.get('room');
@@ -42,10 +43,22 @@
 			user-select: none;
 			border-radius: 3vh;
 		}
+		#mute-container {
+			font-size: 4vh;
+			margin-top: 1vh;
+		}
 		div {
 			margin: auto;
 			text-align: center;
 			font-size: 5vh;
+		}
+		input {
+			text-align: center;
+			margin: auto;
+		}
+		label {
+			text-align: center;
+			margin: auto;
 		}
 		body {
 			background: #c0c0c0;
@@ -54,16 +67,29 @@
 </head>
 <body>
 	<div id="button">Buzz</div>
+	<div id="mute-container">
+	<input type="checkbox" name="mute" id="mute">
+	<label for="mute" >Disable Sound</label>
+	</div>
 	<div><u>Currently Buzzed:</u></div>
 	<div id="answering"><i>No One</i></div>
+	<audio id="buzz">
+		<source src="/../assets/buzzer.mp3" type="audio/mpeg">
+	</audio>
 
 	<script type="text/javascript">
 		var button = document.getElementById("button");
 		var answering = document.getElementById("answering");
+		var buzz = document.getElementById("buzz");
+		var muteButton = document.getElementById("mute-container");
+		var mute = document.getElementById("mute");
 		button.addEventListener('click', function() {
 			if(!buzzed) {
 				socket.emit("buzz", room);
 			}
+		});
+		muteButton.addEventListener('click', function() {
+			muted = mute.checked;
 		});
 		socket.on("buzzed", function(data) {
 			console.log(data);
@@ -83,6 +109,9 @@
 				answering.style.color = "blue";
 			} else {
 				answering.style.color = "black";
+			}
+			if(!muted) {
+				buzz.play();
 			}
 		});
 		socket.on("reset", function(data) {
