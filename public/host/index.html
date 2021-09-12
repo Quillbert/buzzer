@@ -71,7 +71,7 @@
 		}
 		@media (max-width: 500px) {
 			#teamsOpen {
-				#position: relative;
+				position: relative;
 			}
 		}
 		button {
@@ -129,6 +129,7 @@
 		<br>
 		<h2><u>Select Teams</u></h2>
 		<div id="players"><i>No Players Connected</i></div>
+		<button id="clear-teams">Clear Teams</button>
 	</div>
 </div>
 <audio id="buzz">
@@ -144,6 +145,7 @@
 	var teamsOpen = document.getElementById("teamsOpen");
 	var exitTeams = document.getElementById("exitTeams");
 	var players = document.getElementById("players");
+	var resetTeams = document.getElementById("clear-teams");
 	reset.addEventListener('click', function() {
 		socket.emit("reset", "");
 	});
@@ -153,6 +155,9 @@
 	});
 	exitTeams.addEventListener('click', function() {
 		modal.style.display = "none";
+	});
+	resetTeams.addEventListener('click', function() {
+		socket.emit("clear-teams", "");
 	});
 	socket.on("code", function(data) {
 		codeIndicator.innerHTML = data;

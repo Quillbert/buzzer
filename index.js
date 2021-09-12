@@ -133,6 +133,15 @@ io.on("connection", function(socket) {
 			listPlayers(room, socket.id);
 		}
 	});
+	socket.on("clear-teams", function(data) {
+		var room = rooms.find(function(element) {
+			return element.host == socket.id;
+		});
+		for(let i = 0; i < room.players.length; i++) {
+			room.players[i].team = "n";
+		}
+		listPlayers(room, socket.id);
+	});
 });
 
 function createRoom(host) {
