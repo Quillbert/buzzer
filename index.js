@@ -56,12 +56,17 @@ io.on("connection", function(socket) {
 		});
 		if(room != null) {
 			var name = data.name.replace(/[^a-zA-Z0-9 ,.$#!-]/g, "");
-			room.players.push(new Player(socket.id, name));
-			socket.join(data.room);
-			if(room.buzzed != "") {
-				io.to(socket.id).emit("buzzed", room.buzzed);
+			var player = room.players.find(function(element) {
+				return element.name == name;
+			});
+			if(player == null) {
+				room.players.push(new Player(socket.id, name));
+				socket.join(data.room);
+				if(room.buzzed != "") {
+					io.to(socket.id).emit("buzzed", room.buzzed);
+				}
+				listPlayers(room, room.host);
 			}
-			listPlayers(room, room.host);
 		}
 	});
 	socket.on("buzz", function(data) {
