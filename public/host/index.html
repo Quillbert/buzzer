@@ -10,224 +10,51 @@
 
 	  gtag('config', 'G-XSMM1Q1WVW');
 	</script>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<title>Host A Buzzer Room</title>
-	<script src="/../../socket.io/socket.io.js"></script>
-	<script type="text/javascript">
-		var socket = io.connect(location.origin);
-		socket.emit("create", "");
-	</script>
+	<meta charset="utf-8">
+	<meta name="description" content="Completely free online buzzer with unlimited players.">
+	<meta name="keywords" content="Free, Online Buzzer, Unlimited Players">
+	<title>Free Online Buzzer</title>
 	<style type="text/css">
+		#top {
+			text-align: center;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 30vh;
+			font-size: 6vh;
+		}
+		#buttons {
+			text-align: center;
+			margin:auto;
+			margin-top: 2vh;
+		}
+		button {
+			font-size: 9vh;
+			font-weight: bold;
+		}
 		body {
-			background: #c0c0c0;
+			background: #c0c0c0c0;
 		}
 		h1 {
 			text-align: center;
-			margin: auto;
-		}
-		#indicator {
-			background: #00cc00;
-			color: #ffffff;
-			width:30vh;
-			height:30vh;
-			text-align: center;
-			font-size: 6vh;
 			margin:auto;
-			line-height: 30vh;
-			user-select: none;
-			border-radius: 1.5vh;
 		}
-		div {
-			text-align: center;
-			margin: auto;
-			margin-top: 1vh;
-			font-size: 5vh;
-		} 
-		#reset {
-			margin: auto;
-			text-align: center;
-		}
-		#code {
-			font-weight: bold;
-			font-size: 15vh;
-		}
-		#modal {
-			left: 0;
-			top: 0;
-			display: none;
-			z-index: 1;
-			position: fixed;
-			width: 100%;
-			height: 100%;
-			margin-top: 0;
-		}
-		@media (min-width: 501px) {
-			#teamsOpen {
-				margin-bottom: 3vh;
-				position: absolute;
-				right: 1vh;
-				top: 1vh;
-			}
-		}
-		@media (max-width: 500px) {
-			#teamsOpen {
-				position: relative;
-			}
-		}
-		button {
-			font-size: 2.5vh;
-		}
-		#teams {
-			position: absolute;
-			top: 10%;
-			left: 20%;
-			width: 60%;
-			height: 80%;
-			background: white;
-			overflow: auto;
-		}
-		#exitTeams {
-			position: absolute;
-			top: 1vh;
-			right: 1vw;
-			color: #ff0000;
-			margin-top: 0;
-			user-select: none;
-		}
-		#exitTeams:hover {
-			color: #cc0000;
-			background: #c0c0c0;
-		}
-		#players {
-			font-size: 4vh;
-		}
-		.players {
-			font-size: 4vh;
-		}
-		select {
-			font-size: 3vh;
-			margin-left: 1vw;
-		}
-		h2 {
-			margin: 1vh;
-			font-size: 4vh;
+		a {
+			margin-left: 3vw;
+			margin-right: 3vw;
 		}
 	</style>
 </head>
 <body>
-<h1>Host A Buzzer Room</h1>
-<div><u>Your Room Code is:</u></div>
-<div id="code"></div>
-<div id="indicator">Waiting</div>
-<div><button id="reset">Reset Buzzer</button></div>
-<div><u>Answering:</u></div>
-<div id="answering"><i>No One</i></div>
-<div><button id="teamsOpen">Edit Teams</button></div>
-<div id="modal">
-	<div id="teams">
-		<div id="exitTeams">&times;</div>
-		<br>
-		<h2><u>Select Teams</u></h2>
-		<div id="players"><i>No Players Connected</i></div>
-		<button id="clear-teams">Clear Teams</button>
-	</div>
+<h1>Online Buzzer</h1>
+<div id="top"><u><strong>We've Moved!</strong></u></div>
+<div id="buttons"><p>Please Update Your Bookmarks.</p>
+<p> You will now be redirected to the new site. </p>
 </div>
-<audio id="buzz">
-	<source src="/../assets/buzzer.mp3" type="audio/mpeg">
-</audio>
-<script type="text/javascript">
-	var codeIndicator = document.getElementById("code");
-	var indicator = document.getElementById("indicator");
-	var reset = document.getElementById("reset");
-	var answering = document.getElementById("answering");
-	var buzz = document.getElementById("buzz");
-	var modal = document.getElementById("modal");
-	var teamsOpen = document.getElementById("teamsOpen");
-	var exitTeams = document.getElementById("exitTeams");
-	var players = document.getElementById("players");
-	var resetTeams = document.getElementById("clear-teams");
-	reset.addEventListener('click', function() {
-		socket.emit("reset", "");
-	});
-	teamsOpen.addEventListener('click', function() {
-		modal.style.display = "block";
-		socket.emit("players", "ask");
-	});
-	exitTeams.addEventListener('click', function() {
-		modal.style.display = "none";
-	});
-	resetTeams.addEventListener('click', function() {
-		socket.emit("clear-teams", "");
-	});
-	socket.on("code", function(data) {
-		codeIndicator.innerHTML = data;
-	});
-	socket.on("buzzed", function(data) {
-		indicator.innerHTML = "Buzzed";
-		indicator.style.background = "#ff0000";
-		answering.innerHTML = data.name;
-		if(data.team == "r") {
-			answering.style.color = "red";
-		} else if(data.team == "b") {
-			answering.style.color = "blue";
-		} else {
-			answering.style.color = "black";
-		}
-		buzz.play();
-	});
-	socket.on("reset", function(data) {
-		indicator.innerHTML = "Waiting";
-		indicator.style.background = "#00cc00";
-		answering.innerHTML = "<i>No One</i>";
-		answering.style.color = "black";
-	});
-	socket.on("players", function(data) {
-		if(data.length == 0) {
-			players.innerHTML = "<i>No Players Connected</i>";
-		} else {
-			players.innerHTML = "";
-			for(let i = 0; i < data.length; i++) {
-				var color;
-				if(data[i].team == "n") {
-					color = "black";
-				} else if(data[i].team == "r") {
-					color = "red";
-				} else if(data[i].team == "b") {
-					color = "blue";
-				}
-				players.innerHTML += "<div class=\"players\" style=\"color: " + color + ";\">"
-				+ data[i].name
-				+ "<select class=\"menu\" id=\"" + data[i].name + "\"><option value=\"black\">None</option><option value=\"red\">Red</option><option value=\"blue\">Blue</option></select>"
-				+ "</div>";
-			}
-		}
-		var menus = document.getElementsByClassName("menu")
-		for(let i = 0; i < menus.length; i++) {
-			var color;
-			if(data[i].team == "n") {
-				color = "black";
-			} else if(data[i].team == "r") {
-				color = "red";
-			} else if(data[i].team == "b") {
-				color = "blue";
-			}
-			menus[i].value = color;
-			menus[i].onchange = function() {
-				var index = this.selectedIndex;
-				var inputText = this.children[index].value;
-				var out = {
-					player: this.id,
-					color: inputText
-				};
-				socket.emit("color", out);
-			}		
-		}
-	});
-	document.addEventListener("keydown", function(e) {
-			if(e.keyCode == 32) {
-				socket.emit("reset", "");
-			}
-		}, false);
+<script>
+function page_redirect() {  
+	window.location = "https://marist-buzzer.onrender.com/";  
+}  
+setTimeout('page_redirect()', 5000);  
 </script>
 </body>
 </html>

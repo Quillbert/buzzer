@@ -10,72 +10,51 @@
 
 	  gtag('config', 'G-XSMM1Q1WVW');
 	</script>
-	<title>Join A Buzzer Room</title>
+	<meta charset="utf-8">
+	<meta name="description" content="Completely free online buzzer with unlimited players.">
+	<meta name="keywords" content="Free, Online Buzzer, Unlimited Players">
+	<title>Free Online Buzzer</title>
 	<style type="text/css">
-		body {
-			background: #c0c0c0;
-		}
-		div {
+		#top {
 			text-align: center;
-			margin: auto;
-			margin-top: 1vh;
-			font-size: 4vh;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 30vh;
+			font-size: 6vh;
+		}
+		#buttons {
+			text-align: center;
+			margin:auto;
+			margin-top: 2vh;
+		}
+		button {
+			font-size: 9vh;
+			font-weight: bold;
+		}
+		body {
+			background: #c0c0c0c0;
 		}
 		h1 {
 			text-align: center;
-			margin: auto;
+			margin:auto;
 		}
-		#top {
-			margin-top: 20vh;
-		}
-		#join {
-			font-size: 3vh;
-		}
-		input {
-			width: 45vh;
-			height: 8vh;
-			font-size: 6vh;
-			text-align: center;
+		a {
+			margin-left: 3vw;
+			margin-right: 3vw;
 		}
 	</style>
-	<script src="/../../socket.io/socket.io.js"></script>
-	<script type="text/javascript">
-		var socket = io.connect(location.origin);
-	</script>
 </head>
 <body>
-	<h1>Join A Buzzer Room</h1>
-	<div id="top"><u>Enter Game Code:</u></div>
-	<div><input type="text" id="code"></div>
-	<div><u>Enter A Name:</u></div>
-	<div><input type="text" id="name"></div>
-	<div><button id="join">Join</button></div>
-	<script type="text/javascript">
-		var button = document.getElementById("join");
-		var code = document.getElementById("code").value;
-		var name = document.getElementById("name").value;
-		button.addEventListener("click", function() {
-			code = document.getElementById("code").value;
-			name = document.getElementById("name").value;
-			if(code != "" && name != "") {
-				var out = {
-					code: code,
-					name: name
-				};
-				socket.emit("ask", out);
-			}
-		});
-		socket.on("available", function(data) {
-			if(data == "yes") {
-				window.location = "/../room/?room=" + code + "&name=" + name; 
-			} else if(data == "name") {
-				window.alert("This name is already taken. Please select another.");
-			} else if(data == "room") {
-				window.alert("This Room doesn't exist. Please verify that you used the correct code.");
-			} else {
-				window.alert("There was an error. Please try again.");
-			}
-		});
-	</script>
+<h1>Online Buzzer</h1>
+<div id="top"><u><strong>We've Moved!</strong></u></div>
+<div id="buttons"><p>Please Update Your Bookmarks.</p>
+<p> You will now be redirected to the new site. </p>
+</div>
+<script>
+function page_redirect() {  
+	window.location = "https://marist-buzzer.onrender.com/";  
+}  
+setTimeout('page_redirect()', 5000);  
+</script>
 </body>
 </html>

@@ -11,123 +11,50 @@
 	  gtag('config', 'G-XSMM1Q1WVW');
 	</script>
 	<meta charset="utf-8">
-	<title>Buzzer</title>
-	<script src="/../../socket.io/socket.io.js"></script>
-	<script type="text/javascript">
-		var buzzed = false;
-		var muted = false;
-		const queryString = window.location.search;
-		const urlParams = new URLSearchParams(queryString);
-		var room = urlParams.get('room');
-		var name = urlParams.get('name');
-		if(room == null || name == null) {
-			window.location.replace('/../');
-		}
-		var socket = io.connect(location.origin);
-		var out = {
-			room: room,
-			name: name
-		};
-		socket.emit("join", out);
-	</script>
+	<meta name="description" content="Completely free online buzzer with unlimited players.">
+	<meta name="keywords" content="Free, Online Buzzer, Unlimited Players">
+	<title>Free Online Buzzer</title>
 	<style type="text/css">
-		#button {
-			background: #00cc00;
-			color: #ffffff;
-			width:60vh;
-			height:60vh;
+		#top {
 			text-align: center;
-			font-size: 15vh;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 30vh;
+			font-size: 6vh;
+		}
+		#buttons {
+			text-align: center;
 			margin:auto;
-			line-height: 60vh;
-			user-select: none;
-			border-radius: 3vh;
+			margin-top: 2vh;
 		}
-		#mute-container {
-			font-size: 4vh;
-			margin-top: 1vh;
-		}
-		div {
-			margin: auto;
-			text-align: center;
-			font-size: 5vh;
-		}
-		input {
-			text-align: center;
-			margin: auto;
-		}
-		label {
-			text-align: center;
-			margin: auto;
+		button {
+			font-size: 9vh;
+			font-weight: bold;
 		}
 		body {
-			background: #c0c0c0;
+			background: #c0c0c0c0;
+		}
+		h1 {
+			text-align: center;
+			margin:auto;
+		}
+		a {
+			margin-left: 3vw;
+			margin-right: 3vw;
 		}
 	</style>
 </head>
 <body>
-	<div id="button">Buzz</div>
-	<div id="mute-container">
-	<input type="checkbox" name="mute" id="mute">
-	<label for="mute" >Disable Sound</label>
-	</div>
-	<div><u>Currently Buzzed:</u></div>
-	<div id="answering"><i>No One</i></div>
-	<audio id="buzz">
-		<source src="/../assets/buzzer.mp3" type="audio/mpeg">
-	</audio>
-
-	<script type="text/javascript">
-		var button = document.getElementById("button");
-		var answering = document.getElementById("answering");
-		var buzz = document.getElementById("buzz");
-		var muteButton = document.getElementById("mute-container");
-		var mute = document.getElementById("mute");
-		button.addEventListener('click', function() {
-			if(!buzzed) {
-				socket.emit("buzz", room);
-			}
-		});
-		muteButton.addEventListener('click', function() {
-			muted = mute.checked;
-		});
-		socket.on("buzzed", function(data) {
-			console.log(data);
-			buzzed = true;
-			if(data.name == name) {
-				button.innerHTML = "Buzzed";
-				button.style.background = "#ff0000";
-				answering.innerHTML = data.name;
-			} else {
-				button.innerHTML = "Locked";
-				button.style.background = "#606060";
-				answering.innerHTML = data.name;
-			}
-			if(data.team == "r") {
-				answering.style.color = "red";
-			} else if(data.team == "b") {
-				answering.style.color = "blue";
-			} else {
-				answering.style.color = "black";
-			}
-			if(!muted) {
-				buzz.play();
-			}
-		});
-		socket.on("reset", function(data) {
-			buzzed = false;
-			button.innerHTML = "Buzz";
-			button.style.background = "#00cc00";
-			answering.innerHTML = "<i>No One</i>";
-			answering.style.color = "black";
-		});
-		document.addEventListener("keydown", function(e) {
-			if(e.keyCode == 32) {
-				if(!buzzed) {
-					socket.emit("buzz", room);
-				}
-			}
-		}, false);
-	</script>
+<h1>Online Buzzer</h1>
+<div id="top"><u><strong>We've Moved!</strong></u></div>
+<div id="buttons"><p>Please Update Your Bookmarks.</p>
+<p> You will now be redirected to the new site. </p>
+</div>
+<script>
+function page_redirect() {  
+	window.location = "https://marist-buzzer.onrender.com/";  
+}  
+setTimeout('page_redirect()', 5000);  
+</script>
 </body>
 </html>
